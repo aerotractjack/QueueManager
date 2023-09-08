@@ -1,6 +1,7 @@
 import os
 from pathlib import Path 
 import shutil
+import json
 
 def read_json(path):
     # helper function to read json contents from filepath
@@ -33,6 +34,22 @@ class QueueManager:
             return (-1,-1)
         return (min(items), max(items))
 
+    def list_waiting_queues(self):
+        # return a list of the names of our waiting queues
+        return list(os.listdir(self.waiting))
+
+    def waiting_queue_lengths(self):
+        # return a dictionary mapping the name of each waiting queue to
+        # the number of items within it - a better version of list_waiting_queues
+        lens = {}
+        for wq in self.list_waiting_queues():
+            lens[wq] = len(os.listdir(self.waiting / wq))
+        return lens
+
+    def read_waiting_queue_item(self, src, src_num):
+        # return the json contents of an item from a waiting queue
+        return read_json(self.waiting / src / str(src_num))
+
     def swap_waiting_queue_items(self, a, a_num, b, b_num):
         # swap queue items
         # a: name of first queue in waiting, ex "main", "example_pipeline", etc
@@ -49,6 +66,10 @@ class QueueManager:
 
     def move_waiting_queue_item(self, src, src_num, dst, dst_num):
         # move queue item from waiting/src/src_num to waiting/dst/dst_num
+        # src: name of source queue in waiting, ex "main", "example_pipeline", etc
+        # src_num: number of item to move from src
+        # dst: name of destination queue in waiting, ex "main", "example_pipeline", etc
+        # dst_num: number of item to move to in dst
         src_path = self.waiting / Path(src) / str(src_num)
         dst_path = self.waiting / Path(dst) / str(dst_num)
         print(src_path, dst_path)
@@ -57,6 +78,8 @@ class QueueManager:
 
     def send_waiting_to_front(self, src, src_num, dst=None):
         # move a waiting job from waiting/src/src_num to waiting/dst/{front}
+        # src: name of queue in waiting, ex "main", "example_pipeline", etc
+        # src_num: number of item to move from src
         if dst is None:
             dst = src
         dst_min, dst_max = self.queue_range(self.waiting / dst)
@@ -88,5 +111,4 @@ class QueueManager:
 
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
-    print(qm.base)
-    qm.delete_waiting_queue_item("main", 22)
+    print(qm.read_waiting_queue_item("main", 23))
