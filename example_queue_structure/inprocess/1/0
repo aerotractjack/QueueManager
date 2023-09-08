@@ -1,0 +1,16 @@
+{
+    "tmpdir": "/home/aerotract/.ziggy/tmp/2023_09_08_11_34_27",
+    "config": {
+        "postprocessing_test_experiment": {
+            "x": 3,
+            "output_path": "/home/aerotract/software/ziggy_workspace/postprocessing_test_processing/output.json"
+        },
+        "postprocessing_test_processing": {
+            "artifacts": {
+                "input_path": "postprocessing_test_experiment.output_path"
+            },
+            "output_path": "/home/aerotract/software/ziggy_workspace/postprocessing_test_processing/output_processed.json",
+            "input_path": "/home/aerotract/software/ziggy_workspace/postprocessing_test_processing/output.json"
+        }
+    }
+}

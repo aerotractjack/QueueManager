@@ -1,0 +1,4 @@
+  File "/home/aerotract/software/ziggy_workspace/broken_pipeline/script.py", line 1
+    import this package does not exist
+                ^^^^^^^
+SyntaxError: invalid syntax

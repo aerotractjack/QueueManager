@@ -1,0 +1,13 @@
+{
+    "returncode": 1,
+    "stdout": null,
+    "stderr": null,
+    "input": {
+        "tmpdir": "/home/aerotract/.ziggy/tmp/2023_09_08_11_34_23",
+        "config": {
+            "broken_pipeline": {
+                "x": 10
+            }
+        }
+    }
+}

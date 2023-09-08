@@ -1,0 +1,4 @@
+artifacts:
+  input_path: postprocessing_test_experiment.output_path
+input_path: /home/aerotract/software/ziggy_workspace/postprocessing_test_processing/output.json
+output_path: /home/aerotract/software/ziggy_workspace/postprocessing_test_processing/output_processed.json
