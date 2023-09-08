@@ -45,6 +45,7 @@ class QueueManager:
         b_data = read_json(b_path)
         write_json(b_path, a_data)
         write_json(a_path, b_data)
+        return True
 
     def move_waiting_queue_item(self, src, src_num, dst, dst_num):
         # move queue item from waiting/src/src_num to waiting/dst/dst_num
@@ -52,6 +53,7 @@ class QueueManager:
         dst_path = self.waiting / Path(dst) / str(dst_num)
         print(src_path, dst_path)
         shutil.move(src_path, dst_path)
+        return True
 
     def send_waiting_to_front(self, src, src_num, dst=None):
         # move a waiting job from waiting/src/src_num to waiting/dst/{front}
@@ -65,9 +67,10 @@ class QueueManager:
         if dst_min == 0 and dst_max == 0:
             return self.send_waiting_to_back(src, src_num, dst)
         if src == dst and src_num == dst_num:
-            return
+            return True
         dst_num = dst_min - 1
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
+        return True
 
     def send_waiting_to_back(self, src, src_num, dst=None):
         # move a waiting job from waiting/src/src_num to waiting/dst/{back}
@@ -76,9 +79,14 @@ class QueueManager:
         _, dst_max = self.queue_range(self.waiting / dst)
         dst_num = dst_max + 1
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
+        return True
         
+    def delete_waiting_queue_item(self, src, src_num):
+        # remove a waiting queue item 
+        os.remove(self.waiting / src/ str(src_num))
+        return True
 
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
     print(qm.base)
-    qm.send_waiting_to_back("main", 21)
+    qm.delete_waiting_queue_item("main", 22)
