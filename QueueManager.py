@@ -42,6 +42,8 @@ class QueueManager:
 
     def list_waiting_queues(self):
         # return a list of the names of our waiting queues
+        if not os.path.isdir(self.waiting):
+            return []
         return list(os.listdir(self.waiting))
 
     def waiting_queue_lengths(self):
@@ -62,6 +64,7 @@ class QueueManager:
         if not os.path.isdir(self.waiting / src):
             return output
         items = [int(x) for x in os.listdir(self.waiting / src)]
+        items.sort()
         for item in items:
             output.append(read_json(self.waiting / src / str(item)))
         return output
