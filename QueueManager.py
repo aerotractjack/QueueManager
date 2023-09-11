@@ -13,6 +13,12 @@ def write_json(path, data):
     with open(path, "w") as fp:
         fp.write(json.dumps(data))
 
+class QueueManagerError(Exception):
+    def __init__(self, message="", header="Queue Manager Error:"):
+        self.message = message
+        self.header = header
+        super().__init__(self.header.strip + self.message)
+
 class QueueManager:
 
     def __init__(self, base):
@@ -82,7 +88,6 @@ class QueueManager:
         # dst_num: number of item to move to in dst
         src_path = self.waiting / Path(src) / str(src_num)
         dst_path = self.waiting / Path(dst) / str(dst_num)
-        print(src_path, dst_path)
         shutil.move(src_path, dst_path)
         return True
 
@@ -96,12 +101,12 @@ class QueueManager:
         if dst_min == -1 and dst_max == -1:
             dst_min = 1
         if dst_min == 0 and dst_min != 0:
-            raise ValueError("Cannot move to front now -- please wait until first job finishes")
+            raise QueueManagerError("Cannot move to front now, wait until first job finishes")
         if dst_min == 0 and dst_max == 0:
             return self.send_waiting_to_back(src, src_num, dst)
         dst_num = dst_min - 1
         if src == dst and src_num == dst_num:
-            return True
+            raise QueueManagerError("Item is already index {dst_num} in {dst}")
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
         return True
 
