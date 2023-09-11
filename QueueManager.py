@@ -89,9 +89,9 @@ class QueueManager:
             raise ValueError("Cannot move to front now -- please wait until first job finishes")
         if dst_min == 0 and dst_max == 0:
             return self.send_waiting_to_back(src, src_num, dst)
+        dst_num = dst_min - 1
         if src == dst and src_num == dst_num:
             return True
-        dst_num = dst_min - 1
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
         return True
 
