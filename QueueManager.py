@@ -42,6 +42,8 @@ class QueueManager:
 
     def list_waiting_queues(self):
         # return a list of the names of our waiting queues
+        if not os.path.isdir(self.waiting):
+            return []
         return list(os.listdir(self.waiting))
 
     def waiting_queue_lengths(self):
@@ -56,6 +58,17 @@ class QueueManager:
         # return the json contents of an item from a waiting queue
         return read_json(self.waiting / src / str(src_num))
 
+    def read_waiting_queue_items(self, src):
+        # return a list of the json contents of all the items from a waiting queue
+        output = []
+        if not os.path.isdir(self.waiting / src):
+            return output
+        items = [int(x) for x in os.listdir(self.waiting / src)]
+        items.sort()
+        for item in items:
+            output.append(read_json(self.waiting / src / str(item)))
+        return output
+    
     def swap_waiting_queue_items(self, a, a_num, b, b_num):
         # swap queue items
         # a: name of first queue in waiting, ex "main", "example_pipeline", etc
