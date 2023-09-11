@@ -6,7 +6,12 @@ import json
 def read_json(path):
     # helper function to read json contents from filepath
     with open(path, "r") as fp:
-        return json.loads(fp.read())
+        textData = fp.read()
+        try:
+            jsonData = json.loads(textData)
+            return jsonData
+        except json.decoder.JSONDecodeError:
+            return "File content is not in JSON format"
 
 def write_json(path, data):
     # helper function to write json data to filepath
