@@ -19,7 +19,8 @@ def list_waiting_queues():
 @app.route("/read_waiting_queue_items", methods=["GET"])
 def read_waiting_queue_items():
     args = request.args.to_dict()
-    output = {"waiting_queue_items": qm.read_waiting_queue_items(**args)}
+    jsonList, itemNames = qm.read_waiting_queue_items(**args)
+    output = {"waiting_queue_items": jsonList, "waiting_queue_item_names": itemNames}
     return jsonify(output)
 
 @app.after_request

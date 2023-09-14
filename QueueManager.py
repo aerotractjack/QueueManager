@@ -11,7 +11,7 @@ def read_json(path):
             jsonData = json.loads(textData)
             return jsonData
         except json.decoder.JSONDecodeError:
-            return "File content is not in JSON format"
+            return textData
 
 def write_json(path, data):
     # helper function to write json data to filepath
@@ -72,7 +72,7 @@ class QueueManager:
         items.sort()
         for item in items:
             output.append(read_json(self.waiting / src / str(item)))
-        return output
+        return output, items
     
     def swap_waiting_queue_items(self, a, a_num, b, b_num):
         # swap queue items
