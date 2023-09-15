@@ -11,6 +11,20 @@ def swap_waiting_q_items():
     output = {"success": resp}
     return jsonify(output)
 
+@app.route("/send_waiting_to_front", methods=["POST"])
+def send_waiting_to_front():
+    data = request.get_json()
+    resp = qm.send_waiting_to_front(**data)
+    output = {"success": resp}
+    return jsonify(output)
+
+@app.route("/send_waiting_to_back", methods=["POST"])
+def send_waiting_to_back():
+    data = request.get_json()
+    resp = qm.send_waiting_to_back(**data)
+    output = {"success": resp}
+    return jsonify(output)
+
 @app.route("/list_waiting_queues", methods=["GET"])
 def list_waiting_queues():
     output = {"waiting_queues": qm.list_waiting_queues()}
