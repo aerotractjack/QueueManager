@@ -132,6 +132,23 @@ class QueueManager:
         os.remove(self.waiting / src/ str(src_num))
         return True
 
+    def list_inprocess_devices(self):
+        # return a list of the names of our inprocess queues
+        if not os.path.isdir(self.inprocess):
+            return []
+        return list(os.listdir(self.inprocess))
+
+    def read_inprocess_queue_items(self):
+        # return a list of the json contents of all the items from all devices in the inprocess queue
+        output = []
+        devices = self.list_inprocess_devices()
+        for device in devices:
+            if os.path.isfile(self.inprocess / device / "0"):
+                output.append(read_json(self.inprocess / device / "0"))
+            else:
+                output.append(dict())
+        return output, devices
+
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
     print(qm.read_waiting_queue_item("main", 23))
