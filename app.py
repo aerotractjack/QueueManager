@@ -37,6 +37,12 @@ def read_waiting_queue_items():
     output = {"waiting_queue_items": jsonList, "waiting_queue_item_names": itemNames}
     return jsonify(output)
 
+@app.route("/read_inprocess_queue_items", methods=["GET"])
+def read_inprocess_queue_items():
+    jsonList, devices = qm.read_inprocess_queue_items()
+    output = {"inprocess_queue_items": jsonList, "inprocess_queue_devices": devices}
+    return jsonify(output)
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
