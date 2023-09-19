@@ -43,6 +43,12 @@ def read_inprocess_queue_items():
     output = {"inprocess_queue_items": jsonList, "inprocess_queue_devices": devices}
     return jsonify(output)
 
+@app.route("/read_tmpdir", methods=["GET"])
+def read_tmpdir():
+    args = request.args.to_dict()
+    outputDict = qm.read_tmpdir(**args)
+    return jsonify(outputDict)
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')

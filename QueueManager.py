@@ -3,6 +3,10 @@ from pathlib import Path
 import shutil
 import json
 
+def read_file(path):
+    with open(path, "r") as fp:
+        return fp.read()
+
 def read_json(path):
     # helper function to read json contents from filepath
     with open(path, "r") as fp:
@@ -142,12 +146,25 @@ class QueueManager:
         # return a list of the json contents of all the items from all devices in the inprocess queue
         output = []
         devices = self.list_inprocess_devices()
+        devices.sort()
         for device in devices:
             if os.path.isfile(self.inprocess / device / "0"):
                 output.append(read_json(self.inprocess / device / "0"))
             else:
-                output.append(dict())
+                output.append("")
         return output, devices
+
+    def read_tmpdir(self, src):
+        src = Path(src).absolute()
+        output = {"error": "", "exception": "", "output": ""}
+        if not os.path.isdir(src):
+            return output 
+        files = os.listdir(src)
+        for target in output:
+            targetFilename = target+".log"
+            if targetFilename in files:
+                output[target] = read_file(src / targetFilename)
+        return output
 
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
