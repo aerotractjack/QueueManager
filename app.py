@@ -49,6 +49,13 @@ def read_tmpdir():
     outputDict = qm.read_tmpdir(**args)
     return jsonify(outputDict)
 
+@app.route("/read_failed_queue_items", methods=["GET"])
+def read_failed_queue_items():
+    args = request.args.to_dict()
+    jsonList, itemNames = qm.read_failed_queue_items(**args)
+    output = {"failed_queue_items": jsonList, "failed_queue_item_names": itemNames}
+    return jsonify(output)
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
