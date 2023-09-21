@@ -166,6 +166,17 @@ class QueueManager:
                 output[target] = read_file(src / targetFilename)
         return output
 
+    def read_failed_queue_items(self):
+        # return a list of the json contents of all the items in the failed queue
+        output = []
+        if not os.path.isdir(self.failed):
+            return output
+        items = os.listdir(self.failed)
+        items.sort()
+        for item in items:
+            output.append(read_json(self.failed / str(item)))
+        return output, items
+
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
     print(qm.read_waiting_queue_item("main", 23))
