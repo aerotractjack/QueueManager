@@ -3,7 +3,16 @@ from pathlib import Path
 import shutil
 import json
 
+def list_given_dir_and_sort(dir):
+    # helper function to list all items from given dir and sort it
+    if not os.path.isdir(dir):
+        return []
+    items = os.listdir(dir)
+    items.sort()
+    return items
+
 def read_file(path):
+    # helper function to read plaintext from path
     with open(path, "r") as fp:
         return fp.read()
 
@@ -69,9 +78,10 @@ class QueueManager:
 
     def read_waiting_queue_items(self, src):
         # return a list of the json contents of all the items from a waiting queue
+        # together with their filenames
         output = []
         if not os.path.isdir(self.waiting / src):
-            return output
+            return output, []
         items = [int(x) for x in os.listdir(self.waiting / src)]
         items.sort()
         for item in items:
@@ -136,17 +146,10 @@ class QueueManager:
         os.remove(self.waiting / src/ str(src_num))
         return True
 
-    def list_inprocess_devices(self):
-        # return a list of the names of our inprocess queues
-        if not os.path.isdir(self.inprocess):
-            return []
-        return list(os.listdir(self.inprocess))
-
     def read_inprocess_queue_items(self):
         # return a list of the json contents of all the items from all devices in the inprocess queue
         output = []
-        devices = self.list_inprocess_devices()
-        devices.sort()
+        devices = list_given_dir_and_sort(self.inprocess)
         for device in devices:
             if os.path.isfile(self.inprocess / device / "0"):
                 output.append(read_json(self.inprocess / device / "0"))
@@ -155,11 +158,10 @@ class QueueManager:
         return output, devices
 
     def read_tmpdir(self, src):
-        src = Path(src).absolute()
+        # return dict of file contents of output.log, error.log, exception.log in tmp/src/ (if exists)
         output = {"error": "", "exception": "", "output": ""}
-        if not os.path.isdir(src):
-            return output 
-        files = os.listdir(src)
+        src = Path(src).absolute()
+        files = list_given_dir_and_sort(src)
         for target in output:
             targetFilename = target+".log"
             if targetFilename in files:
@@ -168,11 +170,9 @@ class QueueManager:
 
     def read_failed_queue_items(self):
         # return a list of the json contents of all the items in the failed queue
+        # together with their filenames
         output = []
-        if not os.path.isdir(self.failed):
-            return output
-        items = os.listdir(self.failed)
-        items.sort()
+        items = list_given_dir_and_sort(self.failed)
         for item in items:
             output.append(read_json(self.failed / str(item)))
         return output, items
