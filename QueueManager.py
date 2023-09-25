@@ -140,11 +140,19 @@ class QueueManager:
         dst_num = dst_max + 1
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
         return True
+
+    def delete_the_file(self, path):
+        # check if the path is a child under self.base and if the file exists
+        # if yes, remove the file and return True
+        baseStr = str(self.base) + "/"
+        if baseStr == str(path)[:len(baseStr)] and os.path.isfile(path):
+            os.remove(path)
+            return True
+        return False
         
     def delete_waiting_queue_item(self, src, src_num):
         # remove a waiting queue item 
-        os.remove(self.waiting / src/ str(src_num))
-        return True
+        return self.delete_the_file(self.waiting / src / str(src_num))
 
     def read_inprocess_queue_items(self):
         # return a list of the json contents of all the items from all devices in the inprocess queue
@@ -156,6 +164,10 @@ class QueueManager:
             else:
                 output.append("")
         return output, devices
+
+    def delete_inprocess_queue_item(self, device_name):
+        # remove a inprocess queue item 
+        return self.delete_the_file(self.inprocess / str(device_name) / "0")
 
     def read_tmpdir(self, src):
         # return dict of file contents of output.log, error.log, exception.log in tmp/src/ (if exists)
@@ -176,6 +188,10 @@ class QueueManager:
         for item in items:
             output.append(read_json(self.failed / str(item)))
         return output, items
+
+    def delete_failed_queue_item(self, item_id):
+        # remove a failed queue item 
+        return self.delete_the_file(self.failed / str(item_id))
 
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")

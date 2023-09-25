@@ -37,11 +37,23 @@ def read_waiting_queue_items():
     output = {"waiting_queue_items": jsonList, "waiting_queue_item_names": itemNames}
     return jsonify(output)
 
+@app.route("/waiting_queue_items/<queue_name>/<item_id>", methods=["DELETE"])
+def delete_waiting_queue_item(queue_name, item_id):
+    return jsonify({
+        "success": qm.delete_waiting_queue_item(queue_name, item_id)
+    })
+
 @app.route("/read_inprocess_queue_items", methods=["GET"])
 def read_inprocess_queue_items():
     jsonList, devices = qm.read_inprocess_queue_items()
     output = {"inprocess_queue_items": jsonList, "inprocess_queue_devices": devices}
     return jsonify(output)
+
+@app.route("/inprocess_queue_items/<device_name>", methods=["DELETE"])
+def delete_inprocess_queue_item(device_name):
+    return jsonify({
+        "success": qm.delete_inprocess_queue_item(device_name)
+    })
 
 @app.route("/read_tmpdir", methods=["GET"])
 def read_tmpdir():
@@ -55,6 +67,12 @@ def read_failed_queue_items():
     jsonList, itemNames = qm.read_failed_queue_items(**args)
     output = {"failed_queue_items": jsonList, "failed_queue_item_names": itemNames}
     return jsonify(output)
+
+@app.route("/failed_queue_items/<item_id>", methods=["DELETE"])
+def delete_failed_queue_item(item_id):
+    return jsonify({
+        "success": qm.delete_failed_queue_item(item_id)
+    })
 
 @app.after_request
 def after_request(response):
