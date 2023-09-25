@@ -140,11 +140,19 @@ class QueueManager:
         dst_num = dst_max + 1
         self.move_waiting_queue_item(src, src_num, dst, dst_num)
         return True
+
+    def delete_the_file(self, path):
+        # check if the path is a child under self.base and if the file exists
+        # if yes, remove the file and return True
+        baseStr = str(self.base) + "/"
+        if baseStr == str(path)[:len(baseStr)] and os.path.isfile(path):
+            os.remove(path)
+            return True
+        return False
         
     def delete_waiting_queue_item(self, src, src_num):
         # remove a waiting queue item 
-        os.remove(self.waiting / src/ str(src_num))
-        return True
+        return self.delete_the_file(self.waiting / src / str(src_num))
 
     def read_inprocess_queue_items(self):
         # return a list of the json contents of all the items from all devices in the inprocess queue

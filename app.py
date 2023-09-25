@@ -37,6 +37,12 @@ def read_waiting_queue_items():
     output = {"waiting_queue_items": jsonList, "waiting_queue_item_names": itemNames}
     return jsonify(output)
 
+@app.route("/waiting_queue_items/<queue_name>/<item_id>", methods=["DELETE"])
+def delete_waiting_queue_item(queue_name, item_id):
+    return jsonify({
+        "success": qm.delete_waiting_queue_item(queue_name, item_id)
+    })
+
 @app.route("/read_inprocess_queue_items", methods=["GET"])
 def read_inprocess_queue_items():
     jsonList, devices = qm.read_inprocess_queue_items()
