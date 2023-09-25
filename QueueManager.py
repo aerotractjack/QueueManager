@@ -165,6 +165,10 @@ class QueueManager:
                 output.append("")
         return output, devices
 
+    def delete_inprocess_queue_item(self, device_name):
+        # remove a inprocess queue item 
+        return self.delete_the_file(self.inprocess / str(device_name) / "0")
+
     def read_tmpdir(self, src):
         # return dict of file contents of output.log, error.log, exception.log in tmp/src/ (if exists)
         output = {"error": "", "exception": "", "output": ""}
@@ -184,6 +188,10 @@ class QueueManager:
         for item in items:
             output.append(read_json(self.failed / str(item)))
         return output, items
+
+    def delete_failed_queue_item(self, item_id):
+        # remove a failed queue item 
+        return self.delete_the_file(self.failed / str(item_id))
 
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
