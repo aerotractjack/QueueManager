@@ -68,10 +68,23 @@ def read_failed_queue_items():
     output = {"failed_queue_items": jsonList, "failed_queue_item_names": itemNames}
     return jsonify(output)
 
-@app.route("/failed_queue_items/<item_id>", methods=["DELETE"])
+@app.route("/failed_queue_items/<item_id>", methods=["DELETE", "OPTIONS"])
 def delete_failed_queue_item(item_id):
     return jsonify({
         "success": qm.delete_failed_queue_item(item_id)
+    })
+
+@app.route("/completed_queue_items", methods=["GET"])
+def read_completed_queue_items():
+    args = request.args.to_dict()
+    jsonList, itemNames = qm.read_completed_queue_items(**args)
+    output = {"completed_queue_items": jsonList, "completed_queue_item_names": itemNames}
+    return jsonify(output)
+
+@app.route("/completed_queue_items/<item_id>", methods=["DELETE", "OPTIONS"])
+def delete_completed_queue_item(item_id):
+    return jsonify({
+        "success": qm.delete_completed_queue_item(item_id)
     })
 
 @app.after_request

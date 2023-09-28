@@ -193,6 +193,19 @@ class QueueManager:
         # remove a failed queue item 
         return self.delete_the_file(self.failed / str(item_id))
 
+    def read_completed_queue_items(self):
+        # return a list of the json contents of all the items in the completed queue
+        # together with their filenames
+        output = []
+        items = list_given_dir_and_sort(self.base / "completed")
+        for item in items:
+            output.append(read_json(self.base / "completed" / str(item)))
+        return output, items
+
+    def delete_completed_queue_item(self, item_id):
+        # remove a completed queue item 
+        return self.delete_the_file(self.base / "completed" / str(item_id))
+
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
     print(qm.read_waiting_queue_item("main", 23))
