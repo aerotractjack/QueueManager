@@ -206,6 +206,10 @@ class QueueManager:
         # remove a completed queue item 
         return self.delete_the_file(self.base / "completed" / str(item_id))
 
+    def read_colors(self):
+        # return the json contents of colors
+        return read_json(self.base / "colors")
+
 if __name__ == "__main__":
     qm = QueueManager("./example_queue_structure")
     print(qm.read_waiting_queue_item("main", 23))

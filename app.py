@@ -87,6 +87,10 @@ def delete_completed_queue_item(item_id):
         "success": qm.delete_completed_queue_item(item_id)
     })
 
+@app.route("/colors", methods=["GET"])
+def read_colors():
+    return jsonify(qm.read_colors())
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
